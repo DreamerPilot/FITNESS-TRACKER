@@ -14,14 +14,12 @@ class InfoMessage:
 
     def get_message(self) -> str:
         """Вывод информационного сообщения о тренировке."""
-        message = (
+        return (
             f"Тип тренировки: {self.training_type}; "
             f"Длительность: {self.duration:.3f} ч.; "
             f"Дистанция: {self.distance:.3f} км; "
             f"Ср. скорость: {self.speed:.3f} км/ч; "
-            f"Потрачено ккал: {self.calories:.3f}."
-        )
-        return message
+            f"Потрачено ккал: {self.calories:.3f}.")
 
 
 class Training:
@@ -64,10 +62,9 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    LEN_STEP = 0.65
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
-    M_IN_KM = 1000
+    M_IN_KM = 1000  # метры переводим в километры
 
     def get_spent_calories(self) -> float:
         """Расчет количества калорий, израсходованных при беге."""
@@ -82,8 +79,8 @@ class Running(Training):
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     LEN_STEP = 0.65
-    CONSTANTS_MULT_WEIGHT1 = 0.035
-    CONSTANTS_MULT_WEIGHT2 = 0.029
+    SPEED_SHIFT = 0.035
+    SPEED_MULTIPLIER = 0.029
     KM_TO_MS = 0.278
     CM_TO_M = 100
 
@@ -93,10 +90,10 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         """Расчет количества калорий, израсходованных при ходьбе."""
-        calories = ((self.CONSTANTS_MULT_WEIGHT1
+        calories = ((self.SPEED_SHIFT
                      * self.weight
                      + ((self.get_mean_speed() * self.KM_TO_MS) ** 2
-                        / self.height) * self.CONSTANTS_MULT_WEIGHT2
+                        / self.height) * self.SPEED_MULTIPLIER
                     * self.weight)
                     * self.duration
                     * self.MIN_IN_H)
@@ -131,17 +128,18 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные, полученные от датчиков."""
-    if workout_type == 'RUN':
-        action, duration, weight = data
-        return Running(action, duration, weight)
-    elif workout_type == 'WLK':
-        action, duration, weight, height = data
-        return SportsWalking(action, duration, weight, height)
-    elif workout_type == 'SWM':
-        action, duration, weight, length_pool, count_pool = data
-        return Swimming(action, duration, weight, length_pool, count_pool)
-    else:
+    workout_classes = {
+        'RUN': Running,
+        'WLK': SportsWalking,
+        'SWM': Swimming,
+    }
+
+    workout_class = workout_classes.get(workout_type)
+
+    if workout_class is None:
         raise ValueError(f"Unknown workout type: {workout_type}")
+
+    return workout_class(*data)
 
 
 def main(training: Training) -> None:
