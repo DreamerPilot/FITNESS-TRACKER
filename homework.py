@@ -24,7 +24,7 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    M_IN_KM = 1000
+    M_IN_KM = 1000  # метры переводим в километры
     LEN_STEP = 0.65
     MIN_IN_H = 60
 
@@ -50,21 +50,19 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        info = InfoMessage(
+        return InfoMessage(
             training_type=self.__class__.__name__,
             duration=self.duration,
             distance=self.get_distance(),
             speed=self.get_mean_speed(),
             calories=self.get_spent_calories()
         )
-        return info
 
 
 class Running(Training):
     """Тренировка: бег."""
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
-    M_IN_KM = 1000  # метры переводим в километры
 
     def get_spent_calories(self) -> float:
         """Расчет количества калорий, израсходованных при беге."""
@@ -138,7 +136,6 @@ def read_package(workout_type: str, data: list) -> Training:
 
     if workout_class is None:
         raise ValueError(f"Unknown workout type: {workout_type}")
-
     return workout_class(*data)
 
 
