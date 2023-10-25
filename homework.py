@@ -24,9 +24,9 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-    M_IN_KM = 1000  # метры переводим в километры
+    M_IN_KM: int = 1000  # метры переводим в километры
     LEN_STEP = 0.65
-    MIN_IN_H = 60
+    MIN_IN_H: int = 60  # минуты переводим в часы
 
     def __init__(self,
                  action: int,
@@ -88,14 +88,12 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         """Расчет количества калорий, израсходованных при ходьбе."""
-        calories = ((self.SPEED_SHIFT
-                     * self.weight
-                     + ((self.get_mean_speed() * self.KM_TO_MS) ** 2
-                        / self.height) * self.SPEED_MULTIPLIER
-                    * self.weight)
-                    * self.duration
-                    * self.MIN_IN_H)
-        return calories
+        return ((self.SPEED_SHIFT
+                 * self.weight
+                 + ((self.get_mean_speed() * self.KM_TO_MS) ** 2
+                    / self.height) * self.SPEED_MULTIPLIER
+                * self.weight) * self.duration
+                * self.MIN_IN_H)
 
 
 class Swimming(Training):
@@ -126,17 +124,17 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные, полученные от датчиков."""
-    workout_classes = {
+    Workout_classes = {
         'RUN': Running,
         'WLK': SportsWalking,
         'SWM': Swimming,
     }
 
-    workout_class = workout_classes.get(workout_type)
+    Workout_class = Workout_classes.get(workout_type)
 
-    if workout_class is None:
+    if Workout_class is None:
         raise ValueError(f"Unknown workout type: {workout_type}")
-    return workout_class(*data)
+    return Workout_class(*data)
 
 
 def main(training: Training) -> None:
