@@ -1,3 +1,6 @@
+from typing import Dict, List, Type
+
+
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     def __init__(self,
@@ -25,7 +28,7 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
     M_IN_KM: int = 1000  # метры переводим в километры
-    LEN_STEP = 0.65
+    LEN_STEP: int = 0.65
     MIN_IN_H: int = 60  # минуты переводим в часы
 
     def __init__(self,
@@ -76,7 +79,6 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    LEN_STEP = 0.65
     SPEED_SHIFT = 0.035
     SPEED_MULTIPLIER = 0.029
     KM_TO_MS = 0.278
@@ -122,19 +124,19 @@ class Swimming(Training):
         )
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: List[float]) -> Training:
     """Прочитать данные, полученные от датчиков."""
-    Workout_classes = {
+    WORKOUT_CLASSES: Dict[str, Type[Training]] = {
         'RUN': Running,
         'WLK': SportsWalking,
         'SWM': Swimming,
     }
 
-    Workout_class = Workout_classes.get(workout_type)
+    WORKOUT_CLASS = WORKOUT_CLASSES.get(workout_type)
 
-    if Workout_class is None:
+    if WORKOUT_CLASS is None:
         raise ValueError(f"Unknown workout type: {workout_type}")
-    return Workout_class(*data)
+    return WORKOUT_CLASS(*data)
 
 
 def main(training: Training) -> None:
