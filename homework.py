@@ -28,7 +28,7 @@ class InfoMessage:
 class Training:
     """Базовый класс тренировки."""
     M_IN_KM: int = 1000  # метры переводим в километры
-    LEN_STEP: int = 0.65
+    LEN_STEP: float = 0.65
     MIN_IN_H: int = 60  # минуты переводим в часы
 
     def __init__(self,
@@ -64,8 +64,8 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    CALORIES_MEAN_SPEED_MULTIPLIER = 18
-    CALORIES_MEAN_SPEED_SHIFT = 1.79
+    CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
+    CALORIES_MEAN_SPEED_SHIFT: float = 1.79
 
     def get_spent_calories(self) -> float:
         """Расчет количества калорий, израсходованных при беге."""
@@ -79,10 +79,10 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    SPEED_SHIFT = 0.035
-    SPEED_MULTIPLIER = 0.029
-    KM_TO_MS = 0.278
-    CM_TO_M = 100
+    SPEED_SHIFT: float = 0.035
+    SPEED_MULTIPLIER: float = 0.029
+    KM_TO_MS: float = 0.278
+    CM_TO_M: int = 100
 
     def __init__(self, action, duration, weight, height):
         super().__init__(action, duration, weight)
@@ -100,9 +100,9 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP = 1.38
-    SPEED_SHIFT = 1.1
-    SPEED_MULTIPLIER = 2
+    LEN_STEP: float = 1.38
+    SPEED_SHIFT: float = 1.1
+    SPEED_MULTIPLIER: int = 2
 
     def __init__(self, action, duration, weight, length_pool, count_pool):
         super().__init__(action, duration, weight)
